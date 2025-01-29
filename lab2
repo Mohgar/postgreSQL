@@ -1,0 +1,186 @@
+create type gender as enum('male', 'female');
+
+alter table student add column gender_info gender;
+
+select * from student;
+
+alter table student add column birth_date date;
+
+select * from student;
+
+alter table student drop column name ;
+ alter table student add column first_name varchar(255),
+ add column last_name varchar(255);
+
+ select * from student;
+
+ create type contact_info as(
+address varchar(255),
+email varchar(255)
+ );
+alter table student drop column address, drop column email, 
+add column contact_info contact_info;
+
+select * from student;
+
+drop sequence if exists track_tarck_id_seq;
+
+SELECT column_name, column_default
+FROM information_schema.columns
+WHERE table_name = 'track' AND column_name = 'track_id';
+
+select * from track;
+
+drop sequence if exists track_trackId_seq cascade;
+select * from track;
+alter table track alter column trackID type smallINT;
+select * from track;
+
+
+drop sequence if exists student_studentID_seq cascade;
+select * from student;
+alter table student alter column studentID type smallINT;
+select * from student;
+
+
+drop sequence if exists exam_examID_seq cascade;
+select * from exam;
+alter table exam alter column examID type smallINT;
+select * from exam;
+
+
+
+drop sequence if exists PhoneNumbers_PhoneID_seq cascade;
+select * from PhoneNumbers;
+alter table PhoneNumbers alter column PhoneID type smallINT;
+select * from PhoneNumbers;
+
+drop sequence if exists Subject_SubjectID_seq cascade;
+select * from Subject;
+alter table Subject alter column SubjectID type smallINT;
+select * from Subject;
+
+
+
+select * from student;
+
+
+ALTER TABLE StudentSubjects
+ADD CONSTRAINT fk_student_track
+FOREIGN KEY (TrackID) REFERENCES Track(TrackID);
+
+CREATE SEQUENCE Track_TrackId_seq
+  START WITH 1
+  INCREMENT BY 1
+
+
+
+SELECT setval('track_trackid_seq', (SELECT MAX(TrackID) FROM Track));
+
+
+INSERT INTO Track (trackid, TrackName)
+VALUES
+  (6, 'mecahnics'),
+  (7, 'Mathematics'),
+  (8, 'Engineering');
+
+select * from Track;
+
+select * from student;
+insert into student values (6, 6, 'male', '1997-04-21', 'mohamed','hgar',row('damanhour', 'mohamed@gmail.com'));
+
+select * from student where gender_info= 'male';
+
+-- Insert multiple rows without specifying StudentID (for SERIAL column)
+INSERT INTO Student 
+VALUES
+  (7,7, 'female', '2000-02-10', 'Sara', 'Ali', row('Cairo', 'sara.ali@example.com')),
+  (8,8, 'male', '1998-07-15', 'Omar', 'Mohamed', row('Alexandria', 'omar.mohamed@example.com')),
+  (9,2, 'female', '1999-11-30', 'Laila', 'Hassan', row('Giza', 'laila.hassan@example.com')),
+  (10,3, 'male', '2001-03-25', 'Ahmed', 'Khaled', row('Tanta', 'ahmed.khaled@example.com')),
+  (11,7, 'female', '1997-06-05', 'Mona', 'Fahmy', row('Port Said', 'mona.fahmy@example.com')),
+  (12,5, 'male', '1996-01-12', 'Tariq', 'Elshamy', row('Sharm El Sheikh', 'tariq.elshamy@example.com'));
+
+
+select count(*) from student where gender_info = 'female';
+
+select * from student where birth_date < '1992-10-01';
+
+select * from student where birth_date < '1991-10-01' 
+and gender_info = 'male';
+
+select subjectname, maxscore from subject order by maxscore;
+
+select subjectname, maxscore as highestMaxScore from subject
+where maxscore = (select max(maxscore) from subject);
+
+
+
+select first_name, last_name from student 
+where first_name like 'A%';
+
+select count(*) from student where first_name='Mohammed';
+
+SELECT gender_info, COUNT(*) AS gender_count
+FROM student
+GROUP BY gender_info;
+
+SELECT first_name, COUNT(*) AS name_count
+FROM student
+GROUP BY first_name
+HAVING COUNT(*) > 2;
+
+select s.first_name, s.
+
+
+, t.trackname from student s join track t
+on t.trackid = s.trackid;
+
+select s.first_name, s.last_name, e.score, l.subjectname from student s 
+join exam e on s.studentid = e.studentid join 
+subject l on e.subjectid = l.subjectid;
+on t.trackid = s.trackid;
+
+
+begin transaction;
+
+
+insert into student (trackiD, gender_info, birth_date, first_name, last_name, contact_info)
+values
+  (1, 'male', '2000-08-15', 'Khaled', 'Sami', row('Cairo', 'khaled.sami@example.com'));
+
+
+
+
+
+insert into exam (examedate, Score, Studentid, Subjectid)
+values
+  ('2025-01-28', 85, (SELECT student_id FROM student), 1),  
+  ('2025-01-28', 90, (SELECT student_id FROM student), 2),  
+  ('2025-01-28', 75, (SELECT student_id FROM student), 3);  
+
+
+commit;
+
+
+BEGIN transaction;
+
+
+INSERT INTO student (TrackID, Gender, BirthDate, FirstName, LastName, ContactInfo)
+VALUES
+  (1, 'female', '2002-04-10', 'Sarah', 'Elbaz', row('Alexandria', 'sarah.elbaz@example.com')),
+  (2, 'male', '2001-09-21', 'Mohamed', 'Naguib', row('Cairo', 'mohamed.naguib@example.com'));
+
+
+
+
+)
+INSERT INTO exam (ExamDate, Score, StudentID, SubjectID)
+VALUES
+  ('2025-01-28', 88, (SELECT student_id FROM student LIMIT 1), 1), 
+  ('2025-01-28', 92, (SELECT student_id FROM student LIMIT 1 OFFSET 1), 2), 
+  ('2025-01-28', 75, (SELECT student_id FROM student LIMIT 1 OFFSET 1), 3), 
+  ('2025-01-28', 85, (SELECT student_id FROM student LIMIT 1), 3); 
+
+
+ROLLBACK;

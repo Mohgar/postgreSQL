@@ -1,0 +1,48 @@
+-- Create Track table
+CREATE TABLE Track (
+    TrackID SERIAL PRIMARY KEY,
+    TrackName VARCHAR(100)
+);
+
+-- Create Student table
+CREATE TABLE Student (
+    StudentID SERIAL PRIMARY KEY,
+    TrackID INT REFERENCES Track(TrackID),
+    Name VARCHAR(100),
+    Email VARCHAR(100),
+    Address VARCHAR(255)
+);
+
+-- Create PhoneNumbers table
+CREATE TABLE PhoneNumbers (
+    PhoneID SERIAL PRIMARY KEY,
+    StudentID INT REFERENCES Student(StudentID),
+    PhoneNumber VARCHAR(15)
+);
+
+
+
+-- Create Subject table
+CREATE TABLE Subject (
+    SubjectID SERIAL PRIMARY KEY,
+    TrackID INT REFERENCES Track(TrackID),
+    SubjectName VARCHAR(100),
+    Description TEXT,
+    MaxScore INT CHECK (MaxScore <= 100)
+);
+
+-- Create Exam table
+CREATE TABLE Exam (
+    ExamID SERIAL PRIMARY KEY,
+    ExamDate DATE,
+    Score INT CHECK (Score <= 100),
+    StudentID INT REFERENCES Student(StudentID),
+    SubjectID INT REFERENCES Subject(SubjectID)
+);
+
+-- Create StudentSubjects table (Associative Entity)
+CREATE TABLE StudentSubjects (
+    StudentID INT REFERENCES Student(StudentID),
+    SubjectID INT REFERENCES Subject(SubjectID),
+    PRIMARY KEY (StudentID, SubjectID)
+);
